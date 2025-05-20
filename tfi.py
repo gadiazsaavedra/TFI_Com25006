@@ -146,13 +146,31 @@ def actualizar_producto():
         )
         nombre = input("Nuevo nombre (Enter para mantener): ").strip() or p[1]
         descripcion = input("Nueva descripción (Enter para mantener): ").strip() or p[2]
-        cantidad = input("Nueva cantidad (Enter para mantener): ").strip()
-        cantidad = int(cantidad) if cantidad.isdigit() else p[3]
-        precio = input("Nuevo precio (Enter para mantener): ").strip()
-        try:
-            precio = float(precio) if precio else p[4]
-        except ValueError:
-            precio = p[4]
+
+        # Validación mejorada para cantidad
+        while True:
+            cantidad = input("Nueva cantidad (Enter para mantener): ").strip()
+            if cantidad == "":
+                cantidad = p[3]
+                break
+            elif cantidad.isdigit():
+                cantidad = int(cantidad)
+                break
+            else:
+                print(Fore.RED + "Cantidad inválida. Debe ser un número entero.")
+
+        # Validación mejorada para precio
+        while True:
+            precio = input("Nuevo precio (Enter para mantener): ").strip()
+            if precio == "":
+                precio = p[4]
+                break
+            try:
+                precio = float(precio)
+                break
+            except ValueError:
+                print(Fore.RED + "Precio inválido. Debe ser un número.")
+
         categoria = input("Nueva categoría (Enter para mantener): ").strip() or p[5]
         cur.execute(
             "UPDATE productos SET nombre=?, descripcion=?, cantidad=?, precio=?, categoria=? WHERE id=?",
