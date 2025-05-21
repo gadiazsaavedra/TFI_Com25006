@@ -36,11 +36,14 @@ def registrar_producto():
             cantidad = int(cantidad)
             break
         print(Fore.RED + "Cantidad inválida. Debe ser un número entero.")
-    # Validar precio
+    # Validar precio no negativo
     while True:
         try:
             precio = float(input("Precio: ").strip())
-            break
+            if precio < 0:
+                print(Fore.RED + "El precio no puede ser negativo.")
+            else:
+                break
         except ValueError:
             print(Fore.RED + "Precio inválido. Debe ser un número.")
     # Validar categoría no vacía
@@ -216,7 +219,7 @@ def actualizar_producto():
                     break
                 else:
                     print(Fore.RED + "Cantidad inválida. Debe ser un número entero.")
-            # Validación para precio
+            # Validación para precio no negativo
             while True:
                 precio = input("Nuevo precio (Enter para mantener): ").strip()
                 if precio == "":
@@ -224,7 +227,10 @@ def actualizar_producto():
                     break
                 try:
                     precio = float(precio)
-                    break
+                    if precio < 0:
+                        print(Fore.RED + "El precio no puede ser negativo.")
+                    else:
+                        break
                 except ValueError:
                     print(Fore.RED + "Precio inválido. Debe ser un número.")
             # Validar categoría no vacía
