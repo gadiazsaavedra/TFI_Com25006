@@ -21,12 +21,25 @@ def es_texto_valido(texto, max_len=50):
     return bool(re.match(r"^[\w\sáéíóúÁÉÍÓÚüÜñÑ.,-]{1," + str(max_len) + "}$", texto))
 
 
+def input_con_volver(mensaje):
+    """
+    Solicita un input y permite volver atrás escribiendo 'volver'.
+    """
+    valor = input(mensaje).strip()
+    if valor.lower() == "volver":
+        return None
+    return valor
+
+
 # Función para registrar un nuevo producto
 def registrar_producto():
     print(Fore.CYAN + "\n--- Registrar Nuevo Producto ---")
     # Validar nombre no vacío y longitud/carácteres
     while True:
-        nombre = input("Nombre: ").strip()
+        nombre = input_con_volver("Nombre: ")
+        if nombre is None:
+            print(Fore.BLUE + "Registro cancelado. Volviendo al menú principal.")
+            return
         if not nombre:
             print(Fore.RED + "El nombre no puede estar vacío.")
         elif not es_texto_valido(nombre, 50):
@@ -38,7 +51,10 @@ def registrar_producto():
             break
     # Validar descripción no vacía y longitud/carácteres
     while True:
-        descripcion = input("Descripción: ").strip()
+        descripcion = input_con_volver("Descripción: ")
+        if descripcion is None:
+            print(Fore.BLUE + "Registro cancelado. Volviendo al menú principal.")
+            return
         if not descripcion:
             print(Fore.RED + "La descripción no puede estar vacía.")
         elif not es_texto_valido(descripcion, 100):
@@ -50,15 +66,22 @@ def registrar_producto():
             break
     # Validar cantidad (no permitir valores negativos)
     while True:
-        cantidad = input("Cantidad: ").strip()
+        cantidad = input_con_volver("Cantidad: ")
+        if cantidad is None:
+            print(Fore.BLUE + "Registro cancelado. Volviendo al menú principal.")
+            return
         if cantidad.isdigit() and int(cantidad) >= 0:
             cantidad = int(cantidad)
             break
         print(Fore.RED + "Cantidad inválida. Debe ser un número entero no negativo.")
     # Validar precio no negativo
     while True:
+        precio = input_con_volver("Precio: ")
+        if precio is None:
+            print(Fore.BLUE + "Registro cancelado. Volviendo al menú principal.")
+            return
         try:
-            precio = float(input("Precio: ").strip())
+            precio = float(precio)
             if precio < 0:
                 print(Fore.RED + "El precio no puede ser negativo.")
             else:
@@ -67,7 +90,10 @@ def registrar_producto():
             print(Fore.RED + "Precio inválido. Debe ser un número.")
     # Validar categoría no vacía y longitud/carácteres
     while True:
-        categoria = input("Categoría: ").strip()
+        categoria = input_con_volver("Categoría: ")
+        if categoria is None:
+            print(Fore.BLUE + "Registro cancelado. Volviendo al menú principal.")
+            return
         if not categoria:
             print(Fore.RED + "La categoría no puede estar vacía.")
         elif not es_texto_valido(categoria, 30):
@@ -318,7 +344,11 @@ def eliminar_producto():
                 Fore.YELLOW
                 + f"¿Está seguro que desea eliminar el producto?\nID: {p[0]}, Nombre: {p[1]}, Descripción: {p[2]}, Cantidad: {p[3]}, Precio: ${p[4]:.2f}, Categoría: {p[5]}"
             )
-            confirm = input(Fore.RED + "Escriba 'SI' para confirmar la eliminación: ").strip().upper()
+            confirm = (
+                input(Fore.RED + "Escriba 'SI' para confirmar la eliminación: ")
+                .strip()
+                .upper()
+            )
             if confirm != "SI":
                 print(Fore.BLUE + "Eliminación cancelada.")
                 return
@@ -385,8 +415,8 @@ else:
 # Menú principal de la aplicación
 while True:
     print(Style.BRIGHT + Fore.BLUE + "\n===== Menú de Inventario =====")
-    print(Fore.YELLOW + "1. Agregar producto")
-    print(Fore.YELLOW + "2. Mostrar productos")
+    print(Fore.YELLOW + "1. Agregar producto - (volver) regresa al Menú")
+    print(Fore.YELLOW + "2. Mostrar/Listar productos")
     print(Fore.YELLOW + "3. Buscar producto")
     print(Fore.YELLOW + "4. Actualizar producto por ID")
     print(Fore.YELLOW + "5. Eliminar producto por ID")
