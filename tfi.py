@@ -29,13 +29,13 @@ def registrar_producto():
         if descripcion:
             break
         print(Fore.RED + "La descripción no puede estar vacía.")
-    # Validar cantidad
+    # Validar cantidad (no permitir valores negativos)
     while True:
         cantidad = input("Cantidad: ").strip()
-        if cantidad.isdigit():
+        if cantidad.isdigit() and int(cantidad) >= 0:
             cantidad = int(cantidad)
             break
-        print(Fore.RED + "Cantidad inválida. Debe ser un número entero.")
+        print(Fore.RED + "Cantidad inválida. Debe ser un número entero no negativo.")
     # Validar precio no negativo
     while True:
         try:
@@ -208,17 +208,20 @@ def actualizar_producto():
                 if descripcion:
                     break
                 print(Fore.RED + "La descripción no puede estar vacía.")
-            # Validación para cantidad
+            # Validación para cantidad (no permitir valores negativos)
             while True:
                 cantidad = input("Nueva cantidad (Enter para mantener): ").strip()
                 if cantidad == "":
                     cantidad = p[3]
                     break
-                elif cantidad.isdigit():
+                elif cantidad.isdigit() and int(cantidad) >= 0:
                     cantidad = int(cantidad)
                     break
                 else:
-                    print(Fore.RED + "Cantidad inválida. Debe ser un número entero.")
+                    print(
+                        Fore.RED
+                        + "Cantidad inválida. Debe ser un número entero no negativo."
+                    )
             # Validación para precio no negativo
             while True:
                 precio = input("Nuevo precio (Enter para mantener): ").strip()
