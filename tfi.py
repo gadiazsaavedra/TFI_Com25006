@@ -309,6 +309,19 @@ def eliminar_producto():
     try:
         with con:
             cur = con.cursor()
+            cur.execute("SELECT * FROM productos WHERE id = ?", (int(id_eliminar),))
+            p = cur.fetchone()
+            if not p:
+                print(Fore.RED + "No se encontró un producto con ese ID.")
+                return
+            print(
+                Fore.YELLOW
+                + f"¿Está seguro que desea eliminar el producto?\nID: {p[0]}, Nombre: {p[1]}, Descripción: {p[2]}, Cantidad: {p[3]}, Precio: ${p[4]:.2f}, Categoría: {p[5]}"
+            )
+            confirm = input(Fore.RED + "Escriba 'SI' para confirmar la eliminación: ").strip().upper()
+            if confirm != "SI":
+                print(Fore.BLUE + "Eliminación cancelada.")
+                return
             cur.execute("DELETE FROM productos WHERE id = ?", (int(id_eliminar),))
             if cur.rowcount:
                 print(Fore.GREEN + "Producto eliminado exitosamente.")
