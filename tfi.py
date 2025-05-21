@@ -17,21 +17,38 @@ def conectar():
 # Función para registrar un nuevo producto
 def registrar_producto():
     print(Fore.CYAN + "\n--- Registrar Nuevo Producto ---")
-    nombre = input("Nombre: ").strip()
-    descripcion = input("Descripción: ").strip()
+    # Validar nombre no vacío
+    while True:
+        nombre = input("Nombre: ").strip()
+        if nombre:
+            break
+        print(Fore.RED + "El nombre no puede estar vacío.")
+    # Validar descripción no vacía
+    while True:
+        descripcion = input("Descripción: ").strip()
+        if descripcion:
+            break
+        print(Fore.RED + "La descripción no puede estar vacía.")
+    # Validar cantidad
     while True:
         cantidad = input("Cantidad: ").strip()
         if cantidad.isdigit():
             cantidad = int(cantidad)
             break
         print(Fore.RED + "Cantidad inválida. Debe ser un número entero.")
+    # Validar precio
     while True:
         try:
             precio = float(input("Precio: ").strip())
             break
         except ValueError:
             print(Fore.RED + "Precio inválido. Debe ser un número.")
-    categoria = input("Categoría: ").strip()
+    # Validar categoría no vacía
+    while True:
+        categoria = input("Categoría: ").strip()
+        if categoria:
+            break
+        print(Fore.RED + "La categoría no puede estar vacía.")
     con = conectar()
     if con is None:
         return
@@ -172,12 +189,23 @@ def actualizar_producto():
                 Fore.YELLOW
                 + f"Producto actual: Nombre: {p[1]}, Descripción: {p[2]}, Cantidad: {p[3]}, Precio: {p[4]}, Categoría: {p[5]}"
             )
-            nombre = input("Nuevo nombre (Enter para mantener): ").strip() or p[1]
-            descripcion = (
-                input("Nueva descripción (Enter para mantener): ").strip() or p[2]
-            )
-
-            # Validación mejorada para cantidad
+            # Validar nombre no vacío
+            while True:
+                nombre = input("Nuevo nombre (Enter para mantener): ").strip()
+                if nombre == "":
+                    nombre = p[1]
+                if nombre:
+                    break
+                print(Fore.RED + "El nombre no puede estar vacío.")
+            # Validar descripción no vacía
+            while True:
+                descripcion = input("Nueva descripción (Enter para mantener): ").strip()
+                if descripcion == "":
+                    descripcion = p[2]
+                if descripcion:
+                    break
+                print(Fore.RED + "La descripción no puede estar vacía.")
+            # Validación para cantidad
             while True:
                 cantidad = input("Nueva cantidad (Enter para mantener): ").strip()
                 if cantidad == "":
@@ -188,8 +216,7 @@ def actualizar_producto():
                     break
                 else:
                     print(Fore.RED + "Cantidad inválida. Debe ser un número entero.")
-
-            # Validación mejorada para precio
+            # Validación para precio
             while True:
                 precio = input("Nuevo precio (Enter para mantener): ").strip()
                 if precio == "":
@@ -200,8 +227,14 @@ def actualizar_producto():
                     break
                 except ValueError:
                     print(Fore.RED + "Precio inválido. Debe ser un número.")
-
-            categoria = input("Nueva categoría (Enter para mantener): ").strip() or p[5]
+            # Validar categoría no vacía
+            while True:
+                categoria = input("Nueva categoría (Enter para mantener): ").strip()
+                if categoria == "":
+                    categoria = p[5]
+                if categoria:
+                    break
+                print(Fore.RED + "La categoría no puede estar vacía.")
             cur.execute(
                 "UPDATE productos SET nombre=?, descripcion=?, cantidad=?, precio=?, categoria=? WHERE id=?",
                 (nombre, descripcion, cantidad, precio, categoria, int(id_actualizar)),
