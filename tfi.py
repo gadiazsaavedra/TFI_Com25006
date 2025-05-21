@@ -1,5 +1,6 @@
 import sqlite3
 from colorama import Fore, Style, init
+import re
 
 # Inicializar colorama para colores en la terminal
 init(autoreset=True)
@@ -14,21 +15,39 @@ def conectar():
         return None
 
 
+# Función para validar texto (nombre, descripción, categoría)
+def es_texto_valido(texto, max_len=50):
+    # Solo permite letras, números, espacios y algunos signos básicos
+    return bool(re.match(r"^[\w\sáéíóúÁÉÍÓÚüÜñÑ.,-]{1," + str(max_len) + "}$", texto))
+
+
 # Función para registrar un nuevo producto
 def registrar_producto():
     print(Fore.CYAN + "\n--- Registrar Nuevo Producto ---")
-    # Validar nombre no vacío
+    # Validar nombre no vacío y longitud/carácteres
     while True:
         nombre = input("Nombre: ").strip()
-        if nombre:
+        if not nombre:
+            print(Fore.RED + "El nombre no puede estar vacío.")
+        elif not es_texto_valido(nombre, 50):
+            print(
+                Fore.RED
+                + "El nombre contiene caracteres no permitidos o es demasiado largo (máx 50)."
+            )
+        else:
             break
-        print(Fore.RED + "El nombre no puede estar vacío.")
-    # Validar descripción no vacía
+    # Validar descripción no vacía y longitud/carácteres
     while True:
         descripcion = input("Descripción: ").strip()
-        if descripcion:
+        if not descripcion:
+            print(Fore.RED + "La descripción no puede estar vacía.")
+        elif not es_texto_valido(descripcion, 100):
+            print(
+                Fore.RED
+                + "La descripción contiene caracteres no permitidos o es demasiado larga (máx 100)."
+            )
+        else:
             break
-        print(Fore.RED + "La descripción no puede estar vacía.")
     # Validar cantidad (no permitir valores negativos)
     while True:
         cantidad = input("Cantidad: ").strip()
@@ -46,12 +65,18 @@ def registrar_producto():
                 break
         except ValueError:
             print(Fore.RED + "Precio inválido. Debe ser un número.")
-    # Validar categoría no vacía
+    # Validar categoría no vacía y longitud/carácteres
     while True:
         categoria = input("Categoría: ").strip()
-        if categoria:
+        if not categoria:
+            print(Fore.RED + "La categoría no puede estar vacía.")
+        elif not es_texto_valido(categoria, 30):
+            print(
+                Fore.RED
+                + "La categoría contiene caracteres no permitidos o es demasiado larga (máx 30)."
+            )
+        else:
             break
-        print(Fore.RED + "La categoría no puede estar vacía.")
     con = conectar()
     if con is None:
         return
@@ -192,22 +217,34 @@ def actualizar_producto():
                 Fore.YELLOW
                 + f"Producto actual: Nombre: {p[1]}, Descripción: {p[2]}, Cantidad: {p[3]}, Precio: {p[4]}, Categoría: {p[5]}"
             )
-            # Validar nombre no vacío
+            # Validar nombre no vacío y longitud/carácteres
             while True:
                 nombre = input("Nuevo nombre (Enter para mantener): ").strip()
                 if nombre == "":
                     nombre = p[1]
-                if nombre:
+                if not nombre:
+                    print(Fore.RED + "El nombre no puede estar vacío.")
+                elif not es_texto_valido(nombre, 50):
+                    print(
+                        Fore.RED
+                        + "El nombre contiene caracteres no permitidos o es demasiado largo (máx 50)."
+                    )
+                else:
                     break
-                print(Fore.RED + "El nombre no puede estar vacío.")
-            # Validar descripción no vacía
+            # Validar descripción no vacía y longitud/carácteres
             while True:
                 descripcion = input("Nueva descripción (Enter para mantener): ").strip()
                 if descripcion == "":
                     descripcion = p[2]
-                if descripcion:
+                if not descripcion:
+                    print(Fore.RED + "La descripción no puede estar vacía.")
+                elif not es_texto_valido(descripcion, 100):
+                    print(
+                        Fore.RED
+                        + "La descripción contiene caracteres no permitidos o es demasiado larga (máx 100)."
+                    )
+                else:
                     break
-                print(Fore.RED + "La descripción no puede estar vacía.")
             # Validación para cantidad (no permitir valores negativos)
             while True:
                 cantidad = input("Nueva cantidad (Enter para mantener): ").strip()
@@ -236,14 +273,20 @@ def actualizar_producto():
                         break
                 except ValueError:
                     print(Fore.RED + "Precio inválido. Debe ser un número.")
-            # Validar categoría no vacía
+            # Validar categoría no vacía y longitud/carácteres
             while True:
                 categoria = input("Nueva categoría (Enter para mantener): ").strip()
                 if categoria == "":
                     categoria = p[5]
-                if categoria:
+                if not categoria:
+                    print(Fore.RED + "La categoría no puede estar vacía.")
+                elif not es_texto_valido(categoria, 30):
+                    print(
+                        Fore.RED
+                        + "La categoría contiene caracteres no permitidos o es demasiado larga (máx 30)."
+                    )
+                else:
                     break
-                print(Fore.RED + "La categoría no puede estar vacía.")
             cur.execute(
                 "UPDATE productos SET nombre=?, descripcion=?, cantidad=?, precio=?, categoria=? WHERE id=?",
                 (nombre, descripcion, cantidad, precio, categoria, int(id_actualizar)),
